@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dialog xsi:noNamespaceSchemaLocation="WatsonDialogDocument_1.0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <flow>
+        <folder label="Main">
+            <output>
+                <prompt selectionType="RANDOM">
+                    <item>Hello, what can I help you with?</item>
+                </prompt>
+                <goto ref="getUserInput_2449614"/>
+            </output>
+            <getUserInput id="getUserInput_2449614">
+                <search ref="folder_2449611"/>
+                <default>
+                    <output>
+                        <prompt selectionType="RANDOM">
+                            <item>I am sorry, I did not understand your question. Please try asking another one.</item>
+                        </prompt>
+                    </output>
+                </default>
+            </getUserInput>
+        </folder>
+        <folder label="Library">
+            <folder label="Live Content" id="folder_2449611">
+                <input>
+                    <grammar>
+                        <item>I want to buy *</item>
+                        <item>I am looking for *</item>
+                        <item>$ list of cloth *</item>
+                        <item>What * cloths * have</item>
+                        <item>$ list cloth * available</item>
+                        <item>$ what cloths do you have</item>
+                    </grammar>
+                    <output>
+                        <prompt selectionType="RANDOM">
+                            <item>We have plenty of cloths for men, women and children. First tell me your gender and age or what particularly are you looking for?</item>
+                        </prompt>
+                    </output>
+                </input>
+                <input>
+                    <input>
+                    <grammar>
+                        <!-- <item>I am \d{2} *</item> -->
+                        <!-- <item>My age is \d{2} *</item> -->
+                        <item>girl</item>
+                        <item>I am * girl</item>
+                        <!-- <item>$ girl *</item> -->
+                        <!-- <item>\d{2}</item> -->
+                        <item>$ woman *</item>
+                        <item>$ man *</item>
+                        <item>$ boy *</item>
+                    </grammar>
+                    <action varName="UserGender" operator="SET_TO_USER_INPUT"/>
+                    <function>
+                        <script name="GetGender">
+                            Name=GetGender
+                            Line= "{UserGender}".replace("I ", "").replace("i ", "").replace("am ", "").replace("my ", "").replace("My ", "").replace("name ", "").replace("is ", "").replace("a ", "")
+                        </script>
+                        <output>
+                            <prompt selectionType="RANDOM">
+                                <item>Got that.</item>
+                            </prompt>
+                            <action varName="UserGender" operator="SET_TO">{MCT:CUSTOM:GetGender:value}</action>
+                            <goto ref="output_2443138"/>
+                        </output>
+                    </function>
+                    <!-- <action varName="UserGender" operator="SET_TO_USER_INPUT"/> -->
+                    <output id="output_2443138">
+                        <prompt selectionType="RANDOM">
+                            <item>How old are you?</item>
+                        </prompt>
+                    </output>
+                    </input>
+                </input>
+            </folder>
+            <folder label="Storage"/>
+        </folder>
+        <folder label="Global"/>
+        <folder label="Concepts">
+            <concept>
+                <grammar>
+                    <item>pizza</item>
+                    <item>pie</item>
+                    <item>za</item>
+                    <item>pizza pie</item>
+                    <item>slice</item>
+                </grammar>
+            </concept>
+        </folder>
+    </flow>
+    <constants>
+        <var_folder name="Home">
+            <var name="UserGender" type="TEXT" description="The user's gender"/>
+            <var name="UserAge" type="TEXT" description="The user's age"/>
+        </var_folder>
+    </constants>
+    <variables>
+        <var_folder name="Home"/>
+    </variables>
+    <settings>
+        <!-- <setting name="USERIDNUM" type="USER">69810</setting>
+        <setting name="EMAIL" type="USER">mwacho@gmail.com</setting>
+        <setting name="PASSWORD" type="USER">mct:f972618f697988c5f1808da2115a54f0</setting>
+        <setting name="FIRSTNAME" type="USER">Matthew</setting>
+        <setting name="LASTNAME" type="USER">james Wachowiak</setting>
+        <setting name="COUNTRY" type="USER">US</setting>
+        <setting name="STATE" type="USER"></setting>
+        <setting name="CITY" type="USER">New York</setting>
+        <setting name="BDAY" type="USER">1</setting>
+        <setting name="BMONTH" type="USER">1</setting>
+        <setting name="BYEAR" type="USER">2001</setting>
+        <setting name="SEX" type="USER">Male</setting>
+        <setting name="DISPLAYNAME" type="USER">Matthew</setting>
+        <setting name="PROVIDESECURITYPASSWORD" type="USER">false</setting>
+        <setting name="SECURITYPASSWORD" type="USER"></setting>
+        <setting name="SHOWPERSPROFILE" type="USER">false</setting>
+        <setting name="USETYPE" type="USER">0</setting>
+        <setting name="DATEJOINED" type="USER">2015-03-30 15:08:32.0</setting>
+        <setting name="LASTLOGIN" type="USER">2015-03-30 15:08:32.0</setting>
+        <setting name="LOGINCOUNT" type="USER">1</setting>
+        <setting name="CREDIT" type="USER">-100</setting>
+        <setting name="CONVCOUNT" type="USER">2</setting>
+        <setting name="PERSONALITYTYPEID" type="USER">6</setting>
+        <setting name="SHOWSENDMESSAGE" type="USER">true</setting>
+        <setting name="ACTIVATED" type="USER">true</setting>
+        <setting name="MESSENGEREMAIL" type="USER"></setting>
+        <setting name="MESSENGERPASSWORD" type="USER"></setting>
+        <setting name="SENDCHATEMAIL" type="USER">true</setting>
+        <setting name="SENDFAVEMAIL" type="USER">true</setting>
+        <setting name="CACHE" type="USER">false</setting>
+        <setting name="CLASSTYPE" type="USER">3</setting>
+        <setting name="AUTOLEARN" type="USER">false</setting>
+        <setting name="LANGUAGE" type="USER">EN</setting>
+        <setting name="RESPONSETIME" type="USER">0</setting>
+        <setting name="MAXAUTOLEARNITEMS" type="USER">0</setting>
+        <setting name="NUMAUTOSETRELATED" type="USER">0</setting>
+        <setting name="TIMEZONEID" type="USER">Australia/Sydney</setting>
+        <setting name="AUTOSETRELATEDNODEID" type="USER">0</setting>
+        <setting name="RETURNTOCHATNODEID" type="USER">0</setting>
+        <setting name="INPUTMASKTYPE" type="USER">0</setting>
+        <setting name="NUMLOGINATTEMPTS" type="USER">0</setting>
+        <setting name="CONCEPTMATCHING" type="USER">0</setting> -->
+    </settings>
+</dialog>

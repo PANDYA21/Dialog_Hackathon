@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## UDFs for creating, training, and querying  dialog service\n\nlibrary(RCurl) # install.packages(\"RCurl\") # if the package is not already installed\nlibrary(httr)\nlibrary(XML)\nlibrary(data.table)\nlibrary(reshape2)\nlibrary(dplyr)\nlibrary(stringr)\n# setwd(\"/Users/ryan/Documents/Project Daisy\")\n\n#\"DIALOG ORANGE SERVICE credentials\": { UNBOUND\nbase_url= \"https://gateway.watsonplatform.net/dialog/api/v1\"\nusername = \"61d28f24-7fa7-4030-a055-7d8eae02dbcb\" # from Bluemix Service Credentials\npassword = \"Bx7R3enYAUBl\"\nusername_password = paste(username,\":\",password,sep=\"\")\ndialog_id=\"\"\n\n####### FUNCTION - New LIST APPS\nwatson.dialog.listapps <- function() \n{ data <- getURL(paste(base_url,\"/dialogs\",sep=\"\"),userpwd = username_password )\ndata <- as.data.frame(strsplit(as.character(data),\"name\"))\ndata <- data[-c(1), ] # remove dud first row\ndata <- data.frame(matrix(data)) # can tidy this method later - IF YOU HAVE MORE THAN ONE DIALOG - YOU\"LL GET MULTIPLE HERE\ndata <- strsplit(as.character(data$matrix.data),\"dialog_id\")\ndata <- t(data.frame(data)) # can tidy this method later\nrownames(data) <- NULL\n# tidy up (there is a better way later)\nprint(data)\ndata[,1] <- str_replace_all(data[,1], \"[[:punct:]]\", \"\") \ndata[,2] <- gsub(\"-\",\" \",data[,2]) \ndata[,2] <- str_replace_all(data[,2], \"[[:punct:]]\", \"\") \ndata[,2] <- gsub(\" \",\"-\",data[,2]) \ndata <- data.frame(data)\nsetnames(data,c(\"dialog_name\",\"dialog_id\"))\nreturn(data)\n}\n\n####### FUNCTION - New Dialog - UPLOAD XML FILE\nwatson.dialog.uploadfile <- function(file,name) \n{ return(POST(url=paste(base_url,\"/dialogs\",sep=\"\"),\n              authenticate(username,password),\n              body = list(file = upload_file(file),\n                          name = name\n              ) ))  }\n\n\n####### FUNCTION - CONVERSE - Used to obtain a response from the system for a submitted input message. Also used to start new conversations\nwatson.dialog.converse <- function(dialog_id, conv_id, cl_id, text_input) \n{\n  segue <- list(\n    conversation_id = conv_id,\n    client_id = cl_id,\n    input = text_input\n  )\n  return\n  ( POST(url=paste(base_url,\"/dialogs/\",dialog_id,\"/conversation\",sep=\"\"), \n         authenticate(username,password),\n         body = segue, encode = \"form\")\n  )}\n### end of function \n\n####### FUNCTION - DELTETE *ONE* DIALOG ID's - WORKING\nwatson.dialog.deletedialogID <- function(kill_dialogID) \n{ return( DELETE(url=paste(base_url,\"/dialogs/\",kill_dialogID,sep=\"\"),userpwd = username_password)\n)  }\n### end of function declaration \n\n######## FUNCTION TO  DELETE ALL DIALOGS (ALL!) > delete /dialogs > Used to close an entire all Dialog applications associated with the service instance.\nwatson.dialog.deletedialogALL <- function() {\n  return( DELETE(url=\"https://gateway.watsonplatform.net/dialog-beta/api/v1/dialogs\",userpwd = username_password) )}\n### end of function declaration \n\n\n#### get nice JSON text based response\ngetResponse <- function(response){\n  return(gsub(\",\", \",.\\n\", content(response, \"text\")))\n}\n\n################################    END OF FUNCTION DECLARATIONS #########\n################################    END OF FUNCTION DECLARATIONS #########",
+    "created" : 1466680427044.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2187933397",
+    "id" : "8B2F2FF8",
+    "lastKnownWriteTime" : 1466698696,
+    "last_content_update" : 1466698696837,
+    "path" : "~/GitHub/Dialog_Hackathon/udfs_dialog.R",
+    "project_path" : "udfs_dialog.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
